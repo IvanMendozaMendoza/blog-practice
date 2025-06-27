@@ -1,0 +1,12 @@
+---
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+    authors: CollectionEntry<'author'>
+}
+
+const {authors} = Astro.props
+console.log(authors);
+---
+
+

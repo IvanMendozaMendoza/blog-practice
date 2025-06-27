@@ -1,0 +1,57 @@
+---
+import type { GetStaticPaths } from "astro";
+import BlogLayout from "@/layouts/BlogLayout.astro";
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+
+export const getStaticPaths = (async () => {
+    const blogCollection = await getCollection("blog");
+
+    const blogs = blogCollection.map((item) => {
+        return {
+            params: {
+                slug: item.id.split(".")[0],
+            },
+            props: {
+                image: item.data.image,
+                authorId: item.data.author.id,
+                blog: item.render,
+            },
+        };
+    });
+    return blogs;
+}) satisfies GetStaticPaths;
+
+const { blog, image, authorId } = Astro.props;
+const author = (await getEntry('author', authorId))?.data
+const { Content, headings } = await blog();
+---
+
+<BlogLayout>
+
+    <div>
+        <Image src={author?.avatar ?? author?.avatar?.src} width={148} height={148} alt="avatar" class="rounded-lg"/>
+        <p>Author: <a href={`/blog/${authorId}`}>{authorId}</a></p>
+    </div>
+
+    {image && (
+        <Image src={image} alt="Cover image" width={600} height={250}/>
+    )}
+
+    <div class="container p-4">
+        <h2>Tabla de contenido</h2>
+        <ol>
+            {headings.map((header, index)=> 
+        <li class="text-lg font-semibold text-stone-300">
+            <a href={`#${header.slug}`}>{index + 1}. {header.text}</a>
+        </li>
+        )}
+        </ol>
+    </div>
+    <Content />
+
+    <div class="my-20">
+        <a href="#btn-home">Go up</a>
+    </div>
+</BlogLayout>

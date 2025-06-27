@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { title, date, description, image, author, tags } = post.data;
+
+const postUrl = post.filePath
+    ?.split("/")
+    .pop()
+    ?.replace(/\.(md|mdx)$/, "");
+---
+
+<div class="lg:flex">
+    {image ? (
+        typeof image === 'string' ? (
+            <img
+                class="object-cover w-full h-56 rounded-lg lg:w-64"
+                src={`/assets/${image}`}
+                width={200}
+                height={200}
+                alt={title}
+            />
+        ) : (
+            <Image
+                class="object-cover w-full h-56 rounded-lg lg:w-64"
+                src={image}
+                width={200}
+                height={200}
+                quality="low"
+                alt={title}
+            />
+        )
+    ) : (
+        <div class="w-full h-56 rounded-lg lg:w-64 bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
+            <span class="text-gray-500 dark:text-gray-400">No image</span>
+        </div>
+    )}
+
+    <div class="flex flex-col justify-between py-6 lg:mx-6">
+        <a
+            href={`/posts/${postUrl}`}
+            class="text-xl font-semibold text-gray-800 hover:underline dark:text-white"
+        >
+            {title}
+        </a>
+
+        <div class="mt-2">
+            <p class="text-sm text-gray-500 dark:text-gray-300 mb-2">
+                {description}
+            </p>
+
+            <div class="flex flex-wrap gap-2 mb-2">
+                {
+                    tags &&
+                        tags
+                            .slice(0, 2)
+                            .map((tag: string) => (
+                                <span class="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full text-xs text-gray-700 dark:text-gray-300">
+                                    {tag}
+                                </span>
+                            ))
+                }
+            </div>
+
+            <div
+                class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-300"
+            >
+                <span>On: {new Date(date).toLocaleDateString()}</span>
+                {author && <span>by {author.id}</span>}
+            </div>
+        </div>
+    </div>
+</div>

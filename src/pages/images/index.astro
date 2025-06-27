@@ -1,0 +1,15 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import imgPost5 from "@/images/post-05.png"
+import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
+---
+
+<MainLayout title="Images testing">
+    <!-- <img src="/assets/images/post-05.png" alt="heave image"  width={250} height={250} > -->
+    <Image width={250} height={250} src={imgPost5} alt="heave image"/>
+        <div class="h-[50px]"></div>
+    <Image style={{height: '250px', width: '250px'}} width={750} height={750}  src={imgPost5} alt="heave image 2"/>
+        <div class="h-[50px]"></div>
+    <Picture widths={[250, 450, imgPost5.width]} sizes={`(max-width: 800px) 250px, (max-width: 1200px) 450px, 100vw ${imgPost5.width}`} formats={['avif', "webp", "png"]} width={250} height={250}  src={imgPost5} alt="heave image 2"/>
+</MainLayout>
