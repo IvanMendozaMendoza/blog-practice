@@ -9,7 +9,7 @@ export const GET: APIRoute = async ({params, request, site})=> {
         stylesheet: 'styles/rss.xsl',
         title: "The bieck's blog",
         description: "a simple practice blog",
-        site: site ?? 'bieck-astro-blog.netlify.app',
+        site: site ?? 'https://bieck-astro-blog.netlify.app',
         items: blogCollection.map(({data, slug})=> ({
             title: data.title,
             description: data.description,
